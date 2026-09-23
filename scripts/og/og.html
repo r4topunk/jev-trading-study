@@ -1,10 +1,11 @@
 <!doctype html>
 <!--
-  Social preview for the study page (docs/og.png, 1200x630). Reads docs/data/study.json. To regenerate:
+  Social preview for the study page: docs/og.png (EN) and docs/og-pt.png (?lang=pt), 1200x630. Reads docs/data/study.json.
+  To regenerate:
     python3 -m http.server 8765        # from the repo root
     chrome --headless=new --hide-scrollbars --force-device-scale-factor=2 --window-size=1200,630 \
       --virtual-time-budget=5000 --screenshot=og@2x.png http://localhost:8765/scripts/og/og.html
-  then downscale og@2x.png to 1200x630 as docs/og.png.
+  then downscale og@2x.png to 1200x630 as docs/og.png. Add ?lang=pt to the URL for docs/og-pt.png.
 -->
 <html lang="en">
 <head>
@@ -25,36 +26,50 @@
 </head>
 <body>
   <div class="left">
-    <div class="brand">Jev on Base</div>
-    <h1>We gave an AI trader 40,000 calls on Base. It did worse than a coin flip.</h1>
+    <div class="brand" id="brand">Jev on Base</div>
+    <h1 id="title">We gave an AI trader 40,000 calls on Base. It did worse than a coin flip.</h1>
     <div class="sub" id="sub"></div>
-    <div class="url">r4topunk.github.io/jev-trading-study</div>
+    <div class="url" id="url">r4topunk.github.io/jev-trading-study</div>
   </div>
   <div class="card">
-    <p class="card-title">AUC, 15-minute calls, 95% intervals</p>
+    <p class="card-title" id="card-title">AUC, 15-minute calls, 95% intervals</p>
     <svg id="c" width="476" height="440" viewBox="0 0 476 440"></svg>
   </div>
 <script type="module">
+  const pt = new URLSearchParams(location.search).get('lang') === 'pt'
+  const L = pt
+    ? { brand: 'Jev na Base', title: 'Um trader de IA tomou 40 mil decisões na Base. Foi pior que cara ou coroa.', card: 'AUC das decisões de 15 min, intervalos de 95%', coin: 'cara ou coroa', all: 'Os quatro', loc: 'pt-BR',
+        sub: (n, a) => `${n} decisões em ETH, cbBTC, SOL e VIRTUAL, com pré-registro e reproduzível. AUC agregada ${a}.` }
+    : { coin: 'coin flip', all: 'All four', loc: 'en-US', sub: (n, a) => `${n} decisions on ETH, cbBTC, SOL and VIRTUAL, pre-registered and reproducible. Pooled AUC ${a}.` }
+  if (pt) {
+    document.documentElement.lang = 'pt-BR'
+    document.getElementById('brand').textContent = L.brand
+    document.getElementById('title').textContent = L.title
+    document.getElementById('title').style.fontSize = '54px'
+    document.getElementById('card-title').textContent = L.card
+    document.getElementById('url').textContent = 'r4topunk.github.io/jev-trading-study/pt'
+  }
+  const fmt = (v, d) => new Intl.NumberFormat(L.loc, { minimumFractionDigits: d, maximumFractionDigits: d }).format(v)
   const D = await (await fetch('../../docs/data/study.json')).json()
   const NS = 'http://www.w3.org/2000/svg', svg = document.getElementById('c')
   const el = (tag, a) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); svg.appendChild(n); return n }
   const text = (x, y, s, a) => { const n = el('text', { x, y, ...a }); n.textContent = s }
-  const rows = [...D.markets.map((m) => ({ name: m.symbol, ...m.horizons.find((h) => h.h === 15) })), { name: 'All four', ...D.pooled, all: true }]
-  const left = 100, right = 20, top = 40, rowH = 66, w = 476
+  const rows = [...D.markets.map((m) => ({ name: m.symbol, ...m.horizons.find((h) => h.h === 15) })), { name: L.all, ...D.pooled, all: true }]
+  const left = 120, right = 20, top = 40, rowH = 66, w = 476
   const x = (v) => left + ((v - 0.44) / (0.54 - 0.44)) * (w - left - right)
   for (const v of [0.44, 0.46, 0.48, 0.5, 0.52, 0.54]) {
     el('line', { x1: x(v), x2: x(v), y1: top - 6, y2: top + rows.length * rowH, stroke: '#e6e9ee', 'stroke-width': 1 })
-    text(x(v), top + rows.length * rowH + 26, v.toFixed(2), { 'text-anchor': 'middle', fill: '#7a8499', 'font-size': 15 })
+    text(x(v), top + rows.length * rowH + 26, fmt(v, 2), { 'text-anchor': 'middle', fill: '#7a8499', 'font-size': 15 })
   }
   el('line', { x1: x(0.5), x2: x(0.5), y1: top - 16, y2: top + rows.length * rowH, stroke: '#898781', 'stroke-width': 2 })
-  text(x(0.5), top - 22, 'coin flip', { 'text-anchor': 'middle', fill: '#7a8499', 'font-size': 15, 'font-weight': 700 })
+  text(x(0.5), top - 22, L.coin, { 'text-anchor': 'middle', fill: '#7a8499', 'font-size': 15, 'font-weight': 700 })
   rows.forEach((r, i) => {
     const cy = top + i * rowH + rowH / 2
     text(left - 16, cy + 6, r.name, { 'text-anchor': 'end', fill: '#16213a', 'font-size': 18, 'font-weight': r.all ? 800 : 600 })
     el('line', { x1: x(r.lo), x2: x(r.hi), y1: cy, y2: cy, stroke: '#2a78d6', 'stroke-width': r.all ? 7 : 4.5, 'stroke-linecap': 'round' })
     el('circle', { cx: x(r.auc), cy, r: r.all ? 11 : 9, fill: '#2a78d6', stroke: '#fcfcfb', 'stroke-width': 3 })
   })
-  document.getElementById('sub').textContent = `${D.totals.decisions.toLocaleString('en-US')} decisions on ETH, cbBTC, SOL and VIRTUAL, pre-registered and reproducible. Pooled AUC ${D.pooled.auc.toFixed(3)}.`
+  document.getElementById('sub').textContent = L.sub(D.totals.decisions.toLocaleString(L.loc), fmt(D.pooled.auc, 3))
   document.body.dataset.ready = '1'
 </script>
 </body>

@@ -54,7 +54,7 @@ node arb/scan.ts                                                          # Limi
 node scripts/site-data.ts                                                 # → docs/data/study.json: also flipped Jev vs free models and the flow-sign check
 ```
 
-The social preview `docs/og.png` is rendered from [`scripts/og/og.html`](scripts/og/og.html) (instructions inside).
+The social previews `docs/og.png` and `docs/og-pt.png` are rendered from [`scripts/og/og.html`](scripts/og/og.html) (instructions inside). Share `/pt/` for a Portuguese link card.
 Markets live in [`src/markets.ts`](src/markets.ts); adding a pool is one line. The public Base RPC works but caps
 `eth_getLogs` at 2,000 blocks and rate-limits. Set `BASE_RPC_URL` to a dedicated endpoint to go faster.
 
