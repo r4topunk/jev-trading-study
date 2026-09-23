@@ -1,0 +1,26 @@
+{
+  "name": "jev-trading-study",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "backfill": "node scripts/backfill.ts",
+    "backtest": "node scripts/backtest.ts",
+    "live": "node scripts/live.ts",
+    "report": "node scripts/report.ts",
+    "drift": "node scripts/drift.ts",
+    "check": "tsc --noEmit",
+    "site": "node scripts/site-data.ts"
+  },
+  "dependencies": {
+    "viem": "^2.56.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2"
+  },
+  "description": "Pre-registered test of the Jev decision model as a crypto trader on Base",
+  "license": "MIT"
+}

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jev on Base: a trading study</title>
+  <meta name="description" content="We scored 40,228 crypto trading decisions from the Jev model against what the price did next. It did worse than a coin flip. Pre-registered, reproducible, open source.">
+  <meta property="og:title" content="We gave an AI trader 40,000 calls on Base. It did worse than a coin flip.">
+  <meta property="og:description" content="A pre-registered, reproducible test of the viral Jev trading bots: 90 days, four Base markets, every decision scored.">
+  <meta property="og:type" content="article">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%232a78d6' stroke-width='3'/%3E%3Cline x1='16' y1='4' x2='16' y2='28' stroke='%2316213a' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="wrap bar-in">
+      <a class="brand" href="#top">Jev on Base</a>
+      <nav class="bar-nav">
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+        </div>
+        <a class="gh" href="https://github.com/r4topunk/jev-trading-study" data-i18n="nav.code">Code and data</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <h1 data-i18n="hero.title">We gave an AI trader 40,000 calls on Base. It did worse than a coin flip.</h1>
+      <p class="lede" data-i18n="hero.lede">Viral posts show Jev, a fast decision model, trading crypto every block. None of them checked whether its calls are right. We did: pre-registered, 90 days, four markets on Base, every decision scored against what the price did next.</p>
+      <figure class="chart-fig hero-fig">
+        <div id="hero-chart" class="chart" role="img" aria-labelledby="hero-cap"></div>
+        <figcaption id="hero-cap" data-i18n="hero.cap">How well Jev's probability that the price rises in 15 minutes separates rises from falls (AUC). 0.5 is a coin flip. Bars are 95% intervals.</figcaption>
+        <details class="table-view"><summary data-i18n="ui.table">Data table</summary><div id="hero-table"></div></details>
+      </figure>
+      <p class="facts" id="hero-facts"></p>
+    </section>
+
+    <section class="wrap sec" id="claims">
+      <h2 data-i18n="claims.title">What the viral posts actually claim</h2>
+      <p class="prose" data-i18n="claims.lede">The posts sell speed and cost. We went looking for the profit.</p>
+      <div class="tbl-wrap">
+        <table class="tbl" id="claims-table">
+          <thead><tr><th data-i18n="claims.h1">Source</th><th data-i18n="claims.h2">What it shows</th><th data-i18n="claims.h3">Profit shown</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wrap sec" id="q1">
+      <h2 data-i18n="q1.title">Does Jev know where the price is going?</h2>
+      <p class="verdict" data-i18n="q1.verdict">No. In every market and horizon its probabilities rank outcomes about as well as chance, and usually a little worse. Free rules do as well or better.</p>
+      <div class="controls" role="group" aria-label="Market">
+        <span class="controls-label" data-i18n="ui.market">Market</span>
+        <div class="seg" id="market-seg"></div>
+      </div>
+      <div class="grid2">
+        <figure class="chart-fig">
+          <figcaption class="fig-title" data-i18n="q1.hTitle">Skill by horizon</figcaption>
+          <div id="h-chart" class="chart" role="img" aria-label="AUC by horizon"></div>
+          <figcaption data-i18n="q1.hCap">Jev against two free rules: momentum bets the last move continues, mean reversion bets it reverses.</figcaption>
+          <details class="table-view"><summary data-i18n="ui.table">Data table</summary><div id="h-table"></div></details>
+        </figure>
+        <figure class="chart-fig">
+          <figcaption class="fig-title" data-i18n="q1.cTitle">Calibration at 15 minutes</figcaption>
+          <div id="c-chart" class="chart" role="img" aria-label="Calibration"></div>
+          <figcaption id="c-cap"></figcaption>
+          <details class="table-view"><summary data-i18n="ui.table">Data table</summary><div id="c-table"></div></details>
+        </figure>
+      </div>
+
+      <div class="sample" id="sample">
+        <div class="sample-head">
+          <h3 data-i18n="sample.title">One decision, as Jev saw it</h3>
+          <button type="button" class="btn" id="sample-next" data-i18n="sample.next">Show another decision</button>
+        </div>
+        <div class="sample-body">
+          <div>
+            <p class="sample-label" data-i18n="sample.state">State sent to Jev</p>
+            <pre class="code" id="sample-state"></pre>
+          </div>
+          <div>
+            <p class="sample-label" data-i18n="sample.answer">Jev's answer: probability the price is higher after</p>
+            <div id="sample-p" class="sample-p"></div>
+            <p class="sample-out" id="sample-out"></p>
+            <p class="sample-label" data-i18n="sample.question">The 15-minute question</p>
+            <pre class="code code-q" id="sample-q"></pre>
+          </div>
+        </div>
+      </div>
+
+      <details class="how">
+        <summary data-i18n="ui.how">How we measured it</summary>
+        <ul id="how-list"></ul>
+      </details>
+    </section>
+
+    <section class="wrap sec" id="q2">
+      <h2 data-i18n="q2.title">Then what is it doing?</h2>
+      <p class="verdict" data-i18n="q2.verdict">Following the trend. Its probability of a rise tracks the last 15 to 60 minutes of price and order flow. On Base, pool prices tend to reverse over that horizon, so following the trend loses.</p>
+      <div class="grid2">
+        <figure class="chart-fig">
+          <figcaption class="fig-title" id="f-title"></figcaption>
+          <div id="f-chart" class="chart" role="img" aria-label="Feature correlation"></div>
+          <figcaption data-i18n="q2.fCap">Rank correlation between Jev's probability and each input. Near 1: Jev moves with that input.</figcaption>
+          <details class="table-view"><summary data-i18n="ui.table">Data table</summary><div id="f-table"></div></details>
+        </figure>
+        <figure class="chart-fig">
+          <figcaption class="fig-title" data-i18n="q2.rTitle">Jev tracks momentum, month after month</figcaption>
+          <div id="r-chart" class="chart" role="img" aria-label="Jev versus momentum"></div>
+          <figcaption id="r-cap"></figcaption>
+          <details class="table-view"><summary data-i18n="ui.table">Data table</summary><div id="r-table"></div></details>
+        </figure>
+      </div>
+      <p class="prose" data-i18n="q2.note">The 90 days were a strong rally: ETH +70%, SOL +73%, cbBTC +42%, VIRTUAL +36%. Momentum over 15 minutes still lost in 11 of 12 market-months. A trend follower loses on this horizon whichever way the month goes.</p>
+    </section>
+
+    <section class="wrap sec" id="q3">
+      <h2 data-i18n="q3.title">Did we get something wrong?</h2>
+      <p class="verdict" data-i18n="q3.verdict">We tried to. The pipeline finds skill when it exists, the result survives a change of price source, and two independent projects found the same pattern.</p>
+      <ul class="checks" id="checks"></ul>
+    </section>
+
+    <section class="wrap sec" id="q4">
+      <h2 data-i18n="q4.title">What if you trade it anyway, or do the opposite?</h2>
+      <p class="verdict" data-i18n="q4.verdict">Trading it loses to holding. Flipping it gives a weaker copy of a free linear model, still far from paying for its trades.</p>
+      <div class="grid2">
+        <figure class="chart-fig">
+          <figcaption class="fig-title" id="e-title"></figcaption>
+          <div id="e-chart" class="chart" role="img" aria-label="Paper equity"></div>
+          <figcaption id="e-cap"></figcaption>
+        </figure>
+        <figure class="chart-fig">
+          <figcaption class="fig-title" data-i18n="q4.fTitle">Out of sample: the last 45 days</figcaption>
+          <div id="x-chart" class="chart" role="img" aria-label="Flipped Jev versus free models"></div>
+          <figcaption data-i18n="q4.fCap">Every model was fit or tuned on the first 45 days and scored on the last 45.</figcaption>
+          <details class="table-view"><summary data-i18n="ui.table">Data table</summary><div id="x-table"></div></details>
+        </figure>
+      </div>
+      <div class="gap-block">
+        <h3 data-i18n="q4.bTitle">The gap no prompt can close</h3>
+        <div id="b-chart" class="chart" role="img" aria-label="Hit rate needed versus available"></div>
+        <p class="prose small" data-i18n="q4.bCap">Each trade on a Base pool pays the pool fee, price impact and gas both ways. Given how far prices move in 15 minutes, breaking even takes the hit rate on the right. The best signal we found reaches the one on the left.</p>
+      </div>
+    </section>
+
+    <section class="wrap sec" id="q5">
+      <h2 data-i18n="q5.title">Is there money around it without predicting anything?</h2>
+      <p class="verdict" data-i18n="q5.verdict">Yes, but it belongs to specialists who were already there. We checked three places and Jev adds nothing to any of them.</p>
+      <div class="three" id="followups"></div>
+    </section>
+
+    <section class="wrap sec" id="next">
+      <h2 data-i18n="next.title">Where Jev might still help</h2>
+      <p class="prose" data-i18n="next.p1">Jev is cheap and quick at judging text. That turns into an edge only where text is the bottleneck, nobody else is reading it fast, and the price is slow to react. In liquid crypto those three rarely meet. The candidates left are narrow: long-tail tokens reacting to unstructured posts, filtering rugs at launch, and reading prediction-market rules. None is tested here.</p>
+      <p class="prose" data-i18n="next.p2">Test the window before the model. For example, first measure how long a pool takes to reprice after a listing announcement. If it is one block, bots already own it and no classifier will help.</p>
+    </section>
+
+    <section class="wrap sec" id="repro">
+      <h2 data-i18n="repro.title">Run it yourself</h2>
+      <p class="prose" data-i18n="repro.p">Everything is in the repository: the pre-registered protocol, the code, and the reports. You need Node 23.6 or later and a Vercel AI Gateway key. The public Base RPC works, just slowly.</p>
+      <pre class="code cmd"><code>git clone https://github.com/r4topunk/jev-trading-study
+cd jev-trading-study && pnpm install
+node scripts/backfill.ts --days 90
+node scripts/backtest.ts --market eth --days 90 --every 15 --max-usd 0.8
+node scripts/compare.ts
+node scripts/audit/positive.ts</code></pre>
+      <ul class="links" id="links"></ul>
+    </section>
+  </main>
+
+  <footer class="foot wrap">
+    <p data-i18n="foot.p1">Research, not financial advice. Nothing here trades or holds funds.</p>
+    <p data-i18n="foot.p2">Data: Base mainnet swaps (Uniswap v3, Aerodrome Slipstream), Binance klines, Limitless and Polymarket public APIs. Jev through the Vercel AI Gateway. September 2026.</p>
+    <p><span data-i18n="foot.by">By</span> <a href="https://github.com/r4topunk">r4to</a>.</p>
+  </footer>
+
+  <div class="tip" id="tip" role="status" aria-live="polite" hidden></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
