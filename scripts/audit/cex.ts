@@ -22,7 +22,7 @@ if (!existsSync(FILE)) {
   writeFileSync(FILE, JSON.stringify(out))
 }
 const cex: Record<string, number> = JSON.parse(readFileSync(FILE, 'utf8'))
-const ds = loadDecisions(m, 'backtest').filter((d) => !d.err && d.prompt === promptVersion(m))
+const ds = loadDecisions(m).filter((d) => !d.err && d.prompt === promptVersion(m))
 for (const h of [1, 5, 15, 60]) {
   const p: number[] = [], upC: boolean[] = [], upD: boolean[] = [], momC: number[] = [], momD: number[] = []
   let last = -Infinity

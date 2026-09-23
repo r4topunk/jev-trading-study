@@ -23,7 +23,7 @@ const every = Number(values.every)
 
 const bars = loadBars(m)
 if (!bars.length) throw new Error(`${m.id}: no bars, run backfill first`)
-const prior = loadDecisions(m, 'backtest').filter((d) => !d.err)
+const prior = loadDecisions(m).filter((d) => !d.err)
 const done = new Set(prior.map((d) => d.t))
 const paid = prior.filter((d) => !d.cached && d.costUsd)
 const since = values.days ? bars.at(-1)!.t - Number(values.days) * 86400 : -Infinity
@@ -46,7 +46,7 @@ let spent = 0, ok = 0, errs = 0, next = 0
 const t0 = Date.now()
 async function worker() {
   while (next < todo.length && spent < maxUsd) {
-    const d = await decide(m, bars, todo[next++]!, 'backtest')
+    const d = await decide(m, bars, todo[next++]!)
     appendDecision(m, d)
     spent += d.costUsd
     d.err ? errs++ : ok++

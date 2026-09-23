@@ -8,11 +8,14 @@
   "scripts": {
     "backfill": "node scripts/backfill.ts",
     "backtest": "node scripts/backtest.ts",
-    "live": "node scripts/live.ts",
     "report": "node scripts/report.ts",
+    "compare": "node scripts/compare.ts",
     "drift": "node scripts/drift.ts",
-    "check": "tsc --noEmit",
-    "site": "node scripts/site-data.ts"
+    "lp": "node scripts/lp-markout.ts",
+    "cexdex": "node scripts/cexdex.ts",
+    "scan": "node arb/scan.ts",
+    "site": "node scripts/site-data.ts",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "viem": "^2.56.8"

@@ -14,7 +14,7 @@ const std = (xs: number[]) => {
 /**
  * What Jev sees at decision time T = bars[i].t + 60 (bars[i] is the last closed minute).
  * Relative numbers only: no timestamps, no dates, no absolute price. A backtest over the past must not let
- * the model recognise the period, and the live run must build exactly the same object.
+ * the model recognise the period, and every logged state must be rebuildable from the bars (the parity check).
  */
 export function buildState(m: Market, bars: Bar[], i: number) {
   if (i < config.lookbackMin || bars[i]!.t - bars[i - config.lookbackMin]!.t !== config.lookbackMin * 60) {

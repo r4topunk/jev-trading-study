@@ -9,7 +9,7 @@ export const config = {
 
   // Pre-registered in EXPERIMENT.md. Changing any of these starts a new experiment.
   lookbackMin: 240,
-  /** Live cadence and backtest default. Phase 0b backtests pass --every 15: same independent 15m samples, 1/3 of the cost. */
+  /** Default backtest cadence. Phase 0b passes --every 15: same independent 15m samples, 1/3 of the cost. */
   decisionEveryMin: 5,
   horizonsMin: [1, 5, 15, 60],
   primaryHorizonMin: 15,

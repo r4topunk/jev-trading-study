@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { config } from './config.ts'
 
-export type EvalResult = {
+type EvalResult = {
   answers: Record<string, { type: string; probability?: number }>
   inputTokens: number
   costUsd: number

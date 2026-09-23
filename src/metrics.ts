@@ -109,7 +109,7 @@ export function normalSf(z: number) {
   return z >= 0 ? erfc / 2 : 1 - erfc / 2
 }
 
-export type Step = { ret: number; long: boolean; contiguous: boolean }
+type Step = { ret: number; long: boolean; contiguous: boolean }
 
 /**
  * Base spot, long or flat (a DEX swap cannot short). Each step holds for one horizon. Every position change

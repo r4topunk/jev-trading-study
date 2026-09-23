@@ -1,3 +1,6 @@
+> Registro histórico da fase 0 (ETH, 30 dias, 1 decisão a cada 5 min), gerado antes da fase 0b.
+> O relatório atual do ETH, com 90 dias, é [eth-backtest.md](eth-backtest.md).
+
 # Jev na Base: relatório backtest
 
 Gerado 2026-09-23T15:12 UTC. Período 2026-08-24 18:55 .. 2026-09-23 14:50 UTC, 8592 decisões

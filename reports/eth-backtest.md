@@ -1,6 +1,6 @@
 # Jev na Base: ETH, backtest
 
-Gerado 2026-09-23T16:44 UTC. Pool Uniswap v3 0.05% `0xd0b53D9277642d899DF5C87A3966A349A798F224` (USDC). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
+Gerado 2026-09-23T20:41 UTC. Pool Uniswap v3 0.05% `0xd0b53D9277642d899DF5C87A3966A349A798F224` (USDC). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
 14353 decisões a cada ~5 min (0 erros). Prompt `619f3715ca0cfab4`.
 Gasto Jev $1.1073. Latência p50 433 ms, p95 607 ms.
 Paridade de estado 14353/14353. Minutos sem swap 2.3%.

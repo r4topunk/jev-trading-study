@@ -12,7 +12,7 @@ const IDS = ['eth', 'cbbtc', 'sol', 'virtual']
 const r3 = (x: number) => Math.round(x * 1000) / 1000
 const r1 = (x: number) => Math.round(x * 10) / 10
 
-const as: Analysis[] = IDS.map((id) => analyze(market(id), 'backtest', 0.05))
+const as: Analysis[] = IDS.map((id) => analyze(market(id), 0.05))
 
 /** Long/flat equity per step, sampled every 6 hours: Jev net, Jev gross, buy & hold. */
 function equity(a: Analysis) {
@@ -59,7 +59,7 @@ const markets = as.map((a) => {
     }),
     features: FEATURES.map(([k, get]) => ({ k, rho: r3(spearman(P.rows.map((r) => r.p), states.map(get))), auc: r3(auc(states.map(get), P.rows.map((r) => r.up))) })),
     equity: equity(a),
-    paper15: { jev: r1(P.paper.jev.retPct), gross: r1(P.paper.jevGross.retPct), hold: r1(P.paper.hold.retPct), trades: P.paper.jev.trades },
+    priceChangePct: r1((a.bars.at(-1)!.c / a.bars.find((b) => b.t >= a.ds[0]!.t - 60)!.c - 1) * 100),
   }
 })
 

@@ -1,6 +1,6 @@
 # Jev na Base: cbBTC, backtest
 
-Gerado 2026-09-23T16:44 UTC. Pool Aerodrome Slipstream `0x7c7420dd105e2779316423ba3e973f434315efa9` (WETH). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
+Gerado 2026-09-23T20:41 UTC. Pool Aerodrome Slipstream `0x7c7420dd105e2779316423ba3e973f434315efa9` (WETH). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
 8625 decisões a cada ~15 min (0 erros). Prompt `bd4011b9b6414258`.
 Gasto Jev $0.6763. Latência p50 417 ms, p95 580 ms.
 Paridade de estado 8625/8625. Minutos sem swap 4.4%.

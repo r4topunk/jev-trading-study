@@ -1,6 +1,6 @@
 # Jev na Base: SOL, backtest
 
-Gerado 2026-09-23T16:44 UTC. Pool Aerodrome Slipstream `0x1131db5977242a03ebead1acd18f80a9a29e5922` (USDC). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
+Gerado 2026-09-23T20:42 UTC. Pool Aerodrome Slipstream `0x1131db5977242a03ebead1acd18f80a9a29e5922` (USDC). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
 8625 decisões a cada ~15 min (0 erros). Prompt `91961615edc2e046`.
 Gasto Jev $0.6617. Latência p50 419 ms, p95 589 ms.
 Paridade de estado 8625/8625. Minutos sem swap 15.0%.

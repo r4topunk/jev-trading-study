@@ -1,18 +1,14 @@
 // Phase 0b: every market side by side, the pooled test and the "Jev ≈ momentum" regime test, with the
 // pre-registered rules from EXPERIMENT.md. Writes reports/markets.md.
-//   node scripts/compare.ts [--mode backtest]
+//   node scripts/compare.ts
 import { mkdirSync, writeFileSync } from 'node:fs'
-import { parseArgs } from 'node:util'
 import { type Analysis, analyze, f, pct, type Row, verdictOf } from '../src/analysis.ts'
 import { iso } from '../src/bars.ts'
 import { config } from '../src/config.ts'
-import type { Mode } from '../src/decisions.ts'
 import { MARKETS } from '../src/markets.ts'
 import { auc, clusterBootstrap, mean, pearson, spearman } from '../src/metrics.ts'
 import { buildState } from '../src/state.ts'
 
-const { values } = parseArgs({ options: { mode: { type: 'string', default: 'backtest' } } })
-const mode = values.mode as Mode
 const alpha = 0.05 / MARKETS.length // Bonferroni over the pre-registered markets
 const BLOCK_S = 30 * 86400
 const MIN_CELL = 300
@@ -20,7 +16,7 @@ const MIN_CELL = 300
 const as: Analysis[] = []
 for (const m of MARKETS) {
   try {
-    as.push(analyze(m, mode, alpha))
+    as.push(analyze(m, alpha))
   } catch (e) {
     console.log(`skip ${m.id}: ${(e as Error).message}`)
   }
@@ -70,7 +66,7 @@ const blockLabel = (b: number) => `${iso(t0 + b * BLOCK_S).slice(0, 10)} +30d`
 const beatMom = cells.filter((c) => c.jev > c.mom).length
 const spend = as.reduce((s, a) => s + a.spend, 0)
 
-const md = `# Jev na Base: comparação entre mercados (${mode})
+const md = `# Jev na Base: comparação entre mercados
 
 Gerado ${new Date().toISOString().slice(0, 16)} UTC. ${as.length} mercados, ${included.length} dentro da regra de qualidade de dado.
 Horizonte ${config.primaryHorizonMin}m, amostras sem sobreposição. IC por mercado a ${f((1 - alpha) * 100, 2)}% (Bonferroni, ${MARKETS.length} mercados).
@@ -100,7 +96,7 @@ O Jev bateu o momentum em ${beatMom} de ${cells.length} células.
 |---|---|---|---|---|---|---|
 ${cells.sort((a, b) => a.id.localeCompare(b.id) || a.block - b.block).map((c) => `| ${c.id} | ${blockLabel(c.block)} | ${c.n} | ${pct(c.up)} | ${f(c.jev)} | ${f(c.mom)} | ${c.jev - c.mom >= 0 ? '+' : ''}${f(c.jev - c.mom)} |`).join('\n')}
 
-Relatório completo de cada mercado: \`reports/<mercado>-${mode}.md\`.
+Relatório completo de cada mercado: \`reports/<mercado>-backtest.md\`.
 `
 
 mkdirSync(config.reportsDir, { recursive: true })

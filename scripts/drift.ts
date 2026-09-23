@@ -17,13 +17,13 @@ const { values } = parseArgs({ options: { market: { type: 'string', default: 'et
 const m = market(values.market!)
 const bars = loadBars(m)
 const at = new Map(bars.map((b, i) => [b.t, i]))
-const logged = loadDecisions(m, 'backtest').filter((d) => !d.err && d.prompt === promptVersion(m) && at.has(d.t - 60))
+const logged = loadDecisions(m).filter((d) => !d.err && d.prompt === promptVersion(m) && at.has(d.t - 60))
 if (!logged.length) throw new Error('no backtest decisions to compare against')
 const canaries = Array.from({ length: 10 }, (_, k) => logged[Math.floor((k * logged.length) / 10)]!)
 
 const deltas: number[] = []
 for (const old of canaries) {
-  const now = await decide(m, bars, at.get(old.t - 60)!, 'backtest', { cache: false })
+  const now = await decide(m, bars, at.get(old.t - 60)!, { cache: false })
   if (now.err) throw new Error(now.err)
   if (now.stateHash !== old.stateHash) throw new Error(`state changed for ${old.t}: bars were rebuilt`)
   for (const h of config.horizonsMin) deltas.push(Math.abs(now.p[h]! - old.p[h]!))

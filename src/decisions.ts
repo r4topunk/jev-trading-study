@@ -6,12 +6,9 @@ import { config } from './config.ts'
 import type { Market } from './markets.ts'
 import { buildState, promptVersion, questionsFor } from './state.ts'
 
-export type Mode = 'backtest' | 'live'
-
 /** One Jev call at decision time `t`. `p[h]` is P(price higher after h minutes). Outcomes are joined later from bars. */
 export type Decision = {
   t: number
-  mode: Mode
   prompt: string
   stateHash: string
   px: number
@@ -20,16 +17,15 @@ export type Decision = {
   costUsd: number
   latencyMs: number
   cached: boolean
-  lagMs?: number
   err?: string
 }
 
-const file = (m: Market, mode: Mode) => `${marketDir(m)}decisions-${mode}.jsonl`
+const file = (m: Market) => `${marketDir(m)}decisions-backtest.jsonl`
 
-export function loadDecisions(m: Market, mode: Mode): Decision[] {
-  if (!existsSync(file(m, mode))) return []
+export function loadDecisions(m: Market): Decision[] {
+  if (!existsSync(file(m))) return []
   const byT = new Map<number, Decision>()
-  for (const line of readFileSync(file(m, mode), 'utf8').split('\n')) {
+  for (const line of readFileSync(file(m), 'utf8').split('\n')) {
     if (!line) continue
     const d = JSON.parse(line) as Decision
     if (!d.err || !byT.has(d.t)) byT.set(d.t, d) // a later success replaces an earlier error
@@ -39,15 +35,15 @@ export function loadDecisions(m: Market, mode: Mode): Decision[] {
 
 export function appendDecision(m: Market, d: Decision) {
   mkdirSync(marketDir(m), { recursive: true })
-  appendFileSync(file(m, d.mode), JSON.stringify(d) + '\n')
+  appendFileSync(file(m), JSON.stringify(d) + '\n')
 }
 
 /** Is bars[i] the last closed minute before a decision time on this cadence? */
 export const isDecisionBar = (bars: Bar[], i: number, everyMin = config.decisionEveryMin) => ((bars[i]!.t + 60) / 60) % everyMin === 0
 
-export async function decide(m: Market, bars: Bar[], i: number, mode: Mode, opts: { cache?: boolean } = {}): Promise<Decision> {
+export async function decide(m: Market, bars: Bar[], i: number, opts: { cache?: boolean } = {}): Promise<Decision> {
   const state = buildState(m, bars, i)
-  const base = { t: bars[i]!.t + 60, mode, prompt: promptVersion(m), stateHash: sha(state), px: bars[i]!.c }
+  const base = { t: bars[i]!.t + 60, prompt: promptVersion(m), stateHash: sha(state), px: bars[i]!.c }
   try {
     const r = await evaluate(state, questionsFor(m), opts)
     const p: Record<string, number> = {}

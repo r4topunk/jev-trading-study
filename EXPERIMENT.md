@@ -12,18 +12,16 @@
 - **Custo:** ~$0.66 de Jev por 30 dias de backtest; ~$0.02/dia no forward.
 
 ```sh
-node scripts/backfill.ts --days 30        # barras de 1 min a partir dos logs Swap do pool
-node scripts/backtest.ts --days 30        # fase 0: replay histórico no Jev
-node scripts/report.ts --mode backtest    # veredito
-node scripts/drift.ts                     # o modelo mudou desde o backtest?
-node scripts/live.ts                      # fase 1: forward paper, tempo real
-node scripts/report.ts --mode live
+node scripts/backfill.ts --days 30                    # barras de 1 min a partir dos logs Swap dos pools
+node scripts/backtest.ts --market eth --days 30       # fase 0: replay histórico no Jev
+node scripts/report.ts --market eth                   # veredito
+node scripts/drift.ts --market eth                    # o modelo mudou desde o backtest?
 ```
 
 ## Resultado da fase 0 (2026-09-23)
 
 **FALHA, sinal invertido.** 8.592 decisões, 2026-08-24 → 2026-09-23, $0.66 de Jev, 0 erros, paridade 8.592/8.592.
-Relatório completo: [reports/backtest.md](reports/backtest.md).
+Relatório completo: [reports/phase0-eth-30d.md](reports/phase0-eth-30d.md).
 
 | h | n indep. | AUC Jev [IC 95%] | momentum | mean-rev | BSS clima |
 |---|---|---|---|---|---|
@@ -227,7 +225,7 @@ Uma AUC de 0.53 seria cientificamente interessante e economicamente inútil como
 | Fase | O que | Duração | Sai para a próxima se |
 |---|---|---|---|
 | 0 | Backtest 30 dias | ~15 min, ~$0.66 | PASSA |
-| 1 | Forward paper, `live.ts` | ≥ 14 dias, ~$0.30 | PASSA **e** P&L líquido > 0 **e** > buy & hold |
+| 1 | Forward paper em tempo real (não rodou: a fase 0 falhou; o runner saiu do repo) | ≥ 14 dias, ~$0.30 | PASSA **e** P&L líquido > 0 **e** > buy & hold |
 | 2 | Execução simulada com cotação real (QuoterV2) e tamanho | a definir | só se a fase 1 passar |
 
 Fase 0 falhou → escrever o resultado e encerrar. Não "ajustar o prompt até dar certo" no mesmo dataset.

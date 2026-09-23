@@ -1,6 +1,6 @@
 # Jev na Base: VIRTUAL, backtest
 
-Gerado 2026-09-23T16:45 UTC. Pool Aerodrome Slipstream `0x3f0296bf652e19bca772ec3df08b32732f93014a` (WETH). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
+Gerado 2026-09-23T20:42 UTC. Pool Aerodrome Slipstream `0x3f0296bf652e19bca772ec3df08b32732f93014a` (WETH). Período 2026-06-25 19:45 .. 2026-09-23 15:45 UTC,
 8625 decisões a cada ~15 min (0 erros). Prompt `ac7f2d7af4d73f2d`.
 Gasto Jev $0.6907. Latência p50 421 ms, p95 591 ms.
 Paridade de estado 8625/8625. Minutos sem swap 3.3%.

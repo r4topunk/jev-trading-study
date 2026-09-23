@@ -56,15 +56,15 @@ const STR = {
     'q2.fCap': "Rank correlation between Jev's probability and each input. Near 1: Jev moves with that input.",
     'q2.rTitle': 'Jev tracks momentum, month after month',
     'q2.rCap': 'Each dot is one market in one 30-day block. Correlation r = {r}. Jev beat momentum in {b} of {n}.',
-    'q2.note': 'The 90 days were a strong rally: ETH +70%, SOL +73%, cbBTC +42%, VIRTUAL +36%. Momentum over 15 minutes still lost in 11 of 12 market-months. A trend follower loses on this horizon whichever way the month goes.',
+    'q2.note': 'The 90 days were a strong rally: {rally}. Momentum over 15 minutes still lost in {lost} of {n} market-months. A trend follower loses on this horizon whichever way the month goes.',
     'feat': { 'returnsBps.m1': 'Return, last minute', 'returnsBps.m15': 'Return, last 15 min', 'returnsBps.m60': 'Return, last hour', 'returnsBps.m240': 'Return, last 4 hours', 'flow.m15.buyShare': 'Buyer share of flow, 15 min', 'flow.m60.netUsd': 'Net taker flow, last hour', 'volatilityBps.m60': 'Volatility, last hour', 'activity.volume15VsAvg4h': 'Volume vs 4-hour average' },
     'q3.title': 'Did we get something wrong?',
     'q3.verdict': 'We tried to. The pipeline finds skill when it exists, the result survives a change of price source, and two independent projects found the same pattern.',
     'checks': [
-      ['ok', 'Positive control', 'Leak the real 15-minute outcome into the state and the same pipeline scores AUC 1.000.', '1.000'],
-      ['ok', 'Order-flow sign', 'Buy flow lines up with the same-minute price move, rank correlation 0.998 on ETH. The inputs mean what they say.', '0.998'],
-      ['ok', 'Another price source', 'Scored against Binance ETH instead of the Base pool, Jev falls to 0.453. The result is not an artifact of AMM prices.', '0.453'],
-      ['ok', 'Model noise', 'Jev gives slightly different answers to the same input, up to ±0.04. Noise pulls AUC toward 0.5; it cannot push it below.', '±0.04'],
+      ['ok', 'Positive control', 'Leak the real 15-minute outcome into the state and the same pipeline scores AUC {pos}.', '{pos}'],
+      ['ok', 'Order-flow sign', 'Buy flow lines up with the same-minute price move, rank correlation {flow} on ETH. The inputs mean what they say.', '{flow}'],
+      ['ok', 'Another price source', 'Scored against Binance ETH instead of the Base pool, Jev falls to {cex}. The result is not an artifact of AMM prices.', '{cex}'],
+      ['ok', 'Model noise', 'Jev gives slightly different answers to the same input, up to ±{noise}. Noise pulls AUC toward 0.5; it cannot push it below.', '±{noise}'],
       ['ref', 'jev-alpha-bench, stocks', 'Daily news and candles for Nasdaq-100 stocks. Negative information coefficient, and Jev follows the last move (ρ ≈ 0.65).', 'IC −0.02', 'https://github.com/Gaurav-Gosain/jev-alpha-bench'],
       ['ref', 'btc-jev-signal, Bitcoin', 'Live forward test with Kraken prices and the Binance order book. 47.8% hits at 15 minutes.', 'AUC 0.467', 'https://github.com/WebGrga/btc-jev-signal'],
       ['ref', 'trade-jev, Nasdaq futures', 'Ten-level order book every 15 seconds. Acting on every answer lost $128,590; the +$20,795 headline was the best of 1,920 settings tried on the same days.', '−$128,590', 'https://github.com/justinhe16/trade-jev'],
@@ -81,9 +81,9 @@ const STR = {
     'q5.title': 'Is there money around it without predicting anything?',
     'q5.verdict': 'Yes, but it belongs to specialists who were already there. We checked three places and Jev adds nothing to any of them.',
     'fu': [
-      { h: 'Arbitrage between prediction markets', big: '0.1¢', p: 'Median price gap between Limitless (on Base) and Polymarket for the same market. 56% of Limitless markets copy Polymarket rules word for word, so matching them needs no model. The one open trade paid 0.9% over 249 days.', src: 'arb/ARB.md' },
+      { h: 'Arbitrage between prediction markets', big: '{gap}¢', p: 'Median price gap between Limitless (on Base) and Polymarket for the same market. {copied} of Limitless markets copy Polymarket rules word for word, so matching them needs no model. The one open trade paid {edge}% over {days} days.', src: 'arb/ARB.md' },
       { h: 'Providing liquidity', big: 'Fees ≈ losses', p: 'What LPs keep per unit of volume after arbitrage and protocol fees, in basis points. The price reversal we found is collected by arbitrageurs at the moment of the swap, not by LPs.', src: 'reports/lp-markout.md' },
-      { h: 'Arbitrage between exchanges', big: '$3,524/day', p: 'Gross gap captured in one ETH pool on one day, before hedging fees and gas. The top three bots take 81 to 90% of it, and a profitable gap closes within one block.', src: 'reports/cexdex.md' },
+      { h: 'Arbitrage between exchanges', big: '${gross}/day', p: 'Gross gap captured in one ETH pool on one day, before hedging fees and gas. The top three bots take {top3} of it, and a profitable gap closes within one block.', src: 'reports/cexdex.md' },
     ],
     'fu.top3': 'Top 3 bots',
     'next.title': 'Where Jev might still help',
@@ -151,15 +151,15 @@ const STR = {
     'q2.fCap': 'Correlação de postos entre a probabilidade do Jev e cada entrada. Perto de 1: o Jev anda junto com aquela entrada.',
     'q2.rTitle': 'O Jev acompanha o momentum, mês após mês',
     'q2.rCap': 'Cada ponto é um mercado em um bloco de 30 dias. Correlação r = {r}. O Jev venceu o momentum em {b} de {n}.',
-    'q2.note': 'Os 90 dias foram de alta forte: ETH +70%, SOL +73%, cbBTC +42%, VIRTUAL +36%. Mesmo assim, o momentum de 15 minutos perdeu em 11 de 12 mercado-meses. Nesse horizonte, quem segue tendência perde, qualquer que seja a direção do mês.',
+    'q2.note': 'Os 90 dias foram de alta forte: {rally}. Mesmo assim, o momentum de 15 minutos perdeu em {lost} de {n} mercado-meses. Nesse horizonte, quem segue tendência perde, qualquer que seja a direção do mês.',
     'feat': { 'returnsBps.m1': 'Retorno, último minuto', 'returnsBps.m15': 'Retorno, últimos 15 min', 'returnsBps.m60': 'Retorno, última hora', 'returnsBps.m240': 'Retorno, últimas 4 horas', 'flow.m15.buyShare': 'Fatia compradora do fluxo, 15 min', 'flow.m60.netUsd': 'Fluxo líquido, última hora', 'volatilityBps.m60': 'Volatilidade, última hora', 'activity.volume15VsAvg4h': 'Volume vs média de 4 horas' },
     'q3.title': 'Será que erramos alguma coisa?',
     'q3.verdict': 'Tentamos achar o erro. O pipeline detecta skill quando ela existe, o resultado sobrevive à troca da fonte de preço, e dois projetos independentes acharam o mesmo padrão.',
     'checks': [
-      ['ok', 'Controle positivo', 'Vazando o resultado real de 15 minutos no estado, o mesmo pipeline marca AUC 1,000.', '1,000'],
-      ['ok', 'Sinal do fluxo', 'O fluxo comprador acompanha o movimento do preço no mesmo minuto, correlação de postos 0,998 no ETH. As entradas significam o que dizem.', '0,998'],
-      ['ok', 'Outra fonte de preço', 'Medido contra o ETH da Binance em vez do pool da Base, o Jev cai para 0,453. O resultado não é artefato do preço de AMM.', '0,453'],
-      ['ok', 'Ruído do modelo', 'O Jev responde um pouco diferente para a mesma entrada, até ±0,04. Ruído puxa a AUC para 0,5; não consegue empurrar para baixo.', '±0,04'],
+      ['ok', 'Controle positivo', 'Vazando o resultado real de 15 minutos no estado, o mesmo pipeline marca AUC {pos}.', '{pos}'],
+      ['ok', 'Sinal do fluxo', 'O fluxo comprador acompanha o movimento do preço no mesmo minuto, correlação de postos {flow} no ETH. As entradas significam o que dizem.', '{flow}'],
+      ['ok', 'Outra fonte de preço', 'Medido contra o ETH da Binance em vez do pool da Base, o Jev cai para {cex}. O resultado não é artefato do preço de AMM.', '{cex}'],
+      ['ok', 'Ruído do modelo', 'O Jev responde um pouco diferente para a mesma entrada, até ±{noise}. Ruído puxa a AUC para 0,5; não consegue empurrar para baixo.', '±{noise}'],
       ['ref', 'jev-alpha-bench, ações', 'Notícias e candles diários de ações da Nasdaq-100. Coeficiente de informação negativo, e o Jev segue o último movimento (ρ ≈ 0,65).', 'IC −0,02', 'https://github.com/Gaurav-Gosain/jev-alpha-bench'],
       ['ref', 'btc-jev-signal, Bitcoin', 'Teste ao vivo com preço da Kraken e o book da Binance. 47,8% de acerto em 15 minutos.', 'AUC 0,467', 'https://github.com/WebGrga/btc-jev-signal'],
       ['ref', 'trade-jev, futuros da Nasdaq', 'Book de dez níveis a cada 15 segundos. Seguir toda resposta perdeu US$ 128.590; o destaque de +US$ 20.795 foi a melhor de 1.920 configurações testadas nos mesmos dias.', '−US$ 128.590', 'https://github.com/justinhe16/trade-jev'],
@@ -176,9 +176,9 @@ const STR = {
     'q5.title': 'Existe dinheiro em volta, sem prever nada?',
     'q5.verdict': 'Sim, mas ele pertence a especialistas que já estavam lá. Olhamos três lugares, e o Jev não agrega em nenhum.',
     'fu': [
-      { h: 'Arbitragem entre mercados de previsão', big: '0,1¢', p: 'Diferença mediana de preço entre Limitless (na Base) e Polymarket no mesmo mercado. 56% dos mercados da Limitless copiam as regras do Polymarket palavra por palavra, então casá-los não precisa de modelo. A única operação aberta rendia 0,9% em 249 dias.', src: 'arb/ARB.md' },
+      { h: 'Arbitragem entre mercados de previsão', big: '{gap}¢', p: 'Diferença mediana de preço entre Limitless (na Base) e Polymarket no mesmo mercado. {copied} dos mercados da Limitless copiam as regras do Polymarket palavra por palavra, então casá-los não precisa de modelo. A única operação aberta rendia {edge}% em {days} dias.', src: 'arb/ARB.md' },
       { h: 'Prover liquidez', big: 'Fees ≈ perdas', p: 'O que o LP guarda por unidade de volume depois da arbitragem e das taxas do protocolo, em pontos-base. A reversão de preço que achamos fica com os arbitradores no instante do swap, não com os LPs.', src: 'reports/lp-markout.md' },
-      { h: 'Arbitragem entre exchanges', big: 'US$ 3.524/dia', p: 'Diferença bruta capturada em um pool de ETH em um dia, antes das fees de hedge e do gás. Os três maiores bots levam de 81 a 90%, e um gap lucrativo fecha em um bloco.', src: 'reports/cexdex.md' },
+      { h: 'Arbitragem entre exchanges', big: 'US$ {gross}/dia', p: 'Diferença bruta capturada em um pool de ETH em um dia, antes das fees de hedge e do gás. Os três maiores bots levam {top3}, e um gap lucrativo fecha em um bloco.', src: 'reports/cexdex.md' },
     ],
     'fu.top3': 'Top 3 bots',
     'next.title': 'Onde o Jev ainda pode ajudar',
@@ -466,6 +466,12 @@ function featureChart() {
   table(document.getElementById('f-table'), [t('t.feature'), t('t.rho'), t('t.aucAlone')], rows.map((r) => [names[r.k] ?? r.k, num(r.rho, 2), num(r.auc)]))
 }
 
+function rallyNote() {
+  const rally = D.markets.map((m) => `${m.symbol} ${signedPct(m.priceChangePct)}`).join(', ')
+  const lost = D.regime.cells.filter((c) => c.mom < 0.5).length
+  document.getElementById('q2-note').textContent = fill(t('q2.note'), { rally, lost, n: D.regime.cells.length })
+}
+
 function regimeChart() {
   const host = document.getElementById('r-chart')
   const cells = D.regime.cells
@@ -607,8 +613,13 @@ function breakEvenChart() {
 function followups() {
   const host = document.getElementById('followups')
   host.textContent = ''
-  const F = t('fu'), lp = D.followups.lp, cx = D.followups.cexdex
-  F.forEach((f, i) => {
+  const F = t('fu'), lp = D.followups.lp, cx = D.followups.cexdex, ar = D.followups.arb
+  const top3 = cx.map((r) => r.top3), vals = {
+    gap: num(ar.gapMedianCents, 1), copied: pct(ar.identicalRules / ar.limitless), edge: num(ar.bestEdgePct, 1), days: ar.bestDays,
+    gross: Math.round(cx[0].grossUsd).toLocaleString(loc()), top3: `${pct(Math.min(...top3))}–${pct(Math.max(...top3))}`,
+  }
+  F.forEach((raw, i) => {
+    const f = { ...raw, big: fill(raw.big, vals), p: fill(raw.p, vals) }
     const box = document.createElement('div'); box.className = 'fu'
     const h = document.createElement('h3'); h.textContent = f.h; box.appendChild(h)
     const big = document.createElement('div'); big.className = 'big'; big.textContent = f.big; box.appendChild(big)
@@ -650,7 +661,9 @@ function claims() {
 function checks() {
   const ul = document.getElementById('checks')
   ul.textContent = ''
-  for (const [kind, title, body, n, href] of t('checks')) {
+  const A = D.audit, vals = { pos: num(A.positiveControl.auc), flow: num(A.flowSign.find((x) => x.m === 'ETH').rho), cex: num(A.cex.auc), noise: num(A.nondeterminism.maxDelta, 2) }
+  for (const [kind, title, rawBody, rawN, href] of t('checks')) {
+    const body = fill(rawBody, vals), n = fill(rawN, vals)
     const li = document.createElement('li')
     const ic = document.createElement('span'); ic.className = kind === 'ok' ? 'ok' : 'ref'; if (kind === 'ok') ic.textContent = '✓'; ic.setAttribute('aria-hidden', 'true'); li.appendChild(ic)
     const mid = document.createElement('div')
@@ -718,7 +731,7 @@ function applyLang() {
 
 function renderAll() {
   applyLang()
-  heroChart(); heroFacts(); claims(); marketSeg(); scoped(); regimeChart(); flipChart(); breakEvenChart(); checks(); how(); followups(); links(); sample()
+  heroChart(); heroFacts(); claims(); marketSeg(); scoped(); regimeChart(); rallyNote(); flipChart(); breakEvenChart(); checks(); how(); followups(); links(); sample()
 }
 
 document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => {

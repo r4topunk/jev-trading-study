@@ -1,19 +1,18 @@
 // Scores Jev's decisions on one market against what the price actually did, next to free baselines, and
-// applies the pre-registered verdict from EXPERIMENT.md. Writes reports/<market>-<mode>.md.
-//   node scripts/report.ts --market eth --mode backtest
+// applies the pre-registered verdict from EXPERIMENT.md. Writes reports/<market>-backtest.md.
+//   node scripts/report.ts --market eth
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
 import { analyze, f, pct, verdictOf } from '../src/analysis.ts'
 import { iso } from '../src/bars.ts'
 import { config } from '../src/config.ts'
-import type { Mode } from '../src/decisions.ts'
 import { market, sideCostBps } from '../src/markets.ts'
 import { auc, mean, quantile, spearman } from '../src/metrics.ts'
 import { buildState, type State } from '../src/state.ts'
 
-const { values } = parseArgs({ options: { mode: { type: 'string', default: 'backtest' }, market: { type: 'string', default: 'eth' } } })
+const { values } = parseArgs({ options: { market: { type: 'string', default: 'eth' } } })
 const m = market(values.market!)
-const a = analyze(m, values.mode as Mode)
+const a = analyze(m)
 const { S, P, ds } = a
 const v = verdictOf(a)
 const money = (x: number) => `${x >= 0 ? '+' : ''}${x.toFixed(2)}%`
@@ -44,11 +43,11 @@ const diagRows = FEATURES.map(([k, get]) => {
 })
 
 const side = sideCostBps(m)
-const md = `# Jev na Base: ${m.symbol}, ${a.mode}
+const md = `# Jev na Base: ${m.symbol}, backtest
 
 Gerado ${new Date().toISOString().slice(0, 16)} UTC. Pool ${m.venue} \`${m.pool}\` (${m.quote}). Período ${iso(ds[0]!.t)} .. ${iso(ds.at(-1)!.t)} UTC,
 ${ds.length} decisões a cada ~${a.cadenceMin} min (${a.errors} erros${a.otherPrompts ? `, ${a.otherPrompts} de outra versão de prompt ignoradas` : ''}). Prompt \`${a.version}\`.
-Gasto Jev $${a.spend.toFixed(4)}. Latência p50 ${a.lat.length ? quantile(a.lat, 0.5) : '--'} ms, p95 ${a.lat.length ? quantile(a.lat, 0.95) : '--'} ms${a.lag.length ? `. Lag da decisão p50 ${(quantile(a.lag, 0.5) / 1000).toFixed(1)} s` : ''}.
+Gasto Jev $${a.spend.toFixed(4)}. Latência p50 ${a.lat.length ? quantile(a.lat, 0.5) : '--'} ms, p95 ${a.lat.length ? quantile(a.lat, 0.95) : '--'} ms.
 Paridade de estado ${a.parityN - a.parityBad}/${a.parityN}. Minutos sem swap ${pct(a.emptyShare)}.
 
 ## Veredito pré-registrado (horizonte ${P.h}m)
@@ -104,6 +103,6 @@ ${S.map((s) => {
 `
 
 mkdirSync(config.reportsDir, { recursive: true })
-writeFileSync(`${config.reportsDir}${m.id}-${a.mode}.md`, md)
+writeFileSync(`${config.reportsDir}${m.id}-backtest.md`, md)
 console.log(md)
-console.log(`→ reports/${m.id}-${a.mode}.md`)
+console.log(`→ reports/${m.id}-backtest.md`)

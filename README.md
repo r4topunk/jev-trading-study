@@ -48,13 +48,13 @@ node scripts/compare.ts                                                   # → 
 node scripts/drift.ts --market eth                                        # did the model change? (10 canaries, no cache)
 node scripts/audit/positive.ts                                            # positive control (200 Jev calls)
 node scripts/audit/cex.ts                                                 # re-score against Binance (no Jev calls)
-node scripts/audit/flip.ts                                                # flipped Jev vs free models, out of sample
 node scripts/lp-markout.ts                                                # LP economics: fees vs markout (no Jev)
 node scripts/cexdex.ts                                                    # CEX-DEX arbitrage: size, concentration, speed
 node arb/scan.ts                                                          # Limitless × Polymarket, read-only
-node scripts/site-data.ts                                                 # → docs/data/study.json for the page
+node scripts/site-data.ts                                                 # → docs/data/study.json: also flipped Jev vs free models and the flow-sign check
 ```
 
+The social preview `docs/og.png` is rendered from [`scripts/og/og.html`](scripts/og/og.html) (instructions inside).
 Markets live in [`src/markets.ts`](src/markets.ts); adding a pool is one line. The public Base RPC works but caps
 `eth_getLogs` at 2,000 blocks and rate-limits. Set `BASE_RPC_URL` to a dedicated endpoint to go faster.
 
@@ -67,7 +67,7 @@ Markets live in [`src/markets.ts`](src/markets.ts); adding a pool is one line. T
 | `src/state.ts` | What Jev sees (relative numbers only) and the questions; prompt version = hash of the questions |
 | `src/jev.ts`, `src/decisions.ts` | Gateway client with cache and retries; one call per decision |
 | `src/analysis.ts`, `src/metrics.ts` | AUC, Brier, bootstrap (plain and clustered), long/flat simulator, pre-registered verdict |
-| `scripts/`, `scripts/audit/` | Backfill, backtest, live, reports, drift, audits, LP, CEX-DEX, site data |
+| `scripts/`, `scripts/audit/` | Backfill, backtest, reports, drift, audits, LP, CEX-DEX, site data |
 | `arb/` | Read-only cross-venue prediction-market scanner |
 | `docs/` | The GitHub Pages site: plain HTML, CSS and JS, no build step |
 

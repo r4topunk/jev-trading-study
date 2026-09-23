@@ -15,7 +15,6 @@ node scripts/backtest.ts --market eth --days 90 --every 15 --max-usd 0.8   # ~$0
 node scripts/report.ts --market eth                                  # → reports/eth-backtest.md
 node scripts/compare.ts                                              # → reports/markets.md (por mercado, agregado, regimes)
 node scripts/drift.ts --market eth                                   # modelo mudou? (10 canários, sem cache)
-node scripts/live.ts --market eth                                    # forward paper
 node scripts/lp-markout.ts                                           # economia de LP: fee vs. markout na Binance 1 s → reports/lp-markout.md
 ```
 
@@ -33,7 +32,7 @@ Base RPC ──eth_getLogs(Swap)──▶ bars.jsonl (1 min: mid, volume, fluxo 
                                    │
                     Jev /v1/evaluate: 4 booleanos P(alta em 1/5/15/60 min)
                                    │
-                    decisions-{backtest,live}.jsonl
+                    decisions-backtest.jsonl
                                    │
       report.ts: junta outcome das barras → AUC, Brier, calibração, baselines, paper long/flat → veredito
 ```
@@ -51,8 +50,8 @@ Base RPC ──eth_getLogs(Swap)──▶ bars.jsonl (1 min: mid, volume, fluxo 
 | `src/jev.ts` | Client HTTP do gateway: cache em disco, retry, custo |
 | `src/decisions.ts` | Uma decisão = uma chamada; formato do log |
 | `src/metrics.ts` | AUC, Brier, bootstrap, simulador long/flat com custo |
-| `scripts/*.ts` | backfill, backtest, live, report, compare, drift, lp-markout, cexdex, site-data |
-| `scripts/audit/*.ts` | controle positivo, sinal do fluxo, resultado medido na Binance, Jev invertido |
+| `scripts/*.ts` | backfill, backtest, report, compare, drift, lp-markout, cexdex, site-data |
+| `scripts/audit/*.ts` | controle positivo e resultado medido na Binance (sinal do fluxo e Jev invertido saem do `site-data.ts`) |
 | `arb/` | Scanner só de leitura Limitless × Polymarket |
 | `docs/` | Site do GitHub Pages (HTML, CSS e JS puros, sem build) |
 
@@ -67,5 +66,5 @@ Base RPC ──eth_getLogs(Swap)──▶ bars.jsonl (1 min: mid, volume, fluxo 
 
 ## Observabilidade
 
-- Cada decisão guarda `stateHash`, `prompt`, `tokens`, `costUsd`, `latencyMs` e, no live, `lagMs`.
+- Cada decisão guarda `stateHash`, `prompt`, `tokens`, `costUsd` e `latencyMs`.
 - O relatório mostra paridade de estado, gasto, latência p50/p95 e erros.

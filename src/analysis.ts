@@ -1,7 +1,7 @@
 import type { Bar } from './base.ts'
 import { loadBars } from './bars.ts'
 import { config } from './config.ts'
-import { type Decision, loadDecisions, type Mode } from './decisions.ts'
+import { type Decision, loadDecisions } from './decisions.ts'
 import { sha } from './jev.ts'
 import { type Market, sideCostBps } from './markets.ts'
 import { auc, bootstrap, brier, logloss, longFlat, mean, normalSf, quantile, rng, sd, spearman } from './metrics.ts'
@@ -10,7 +10,7 @@ import { buildState, promptVersion } from './state.ts'
 export type Row = { t: number; i: number; p: number; up: boolean; ret: number; mom: number; coin: number }
 
 /** Non-overlapping sample for horizon h: each kept decision is at least h minutes after the previous one. */
-export function rowsFor(bars: Bar[], at: Map<number, number>, ds: Decision[], h: number): Row[] {
+function rowsFor(bars: Bar[], at: Map<number, number>, ds: Decision[], h: number): Row[] {
   const out: Row[] = []
   let lastT = -Infinity
   for (const d of ds) {
@@ -71,16 +71,14 @@ function score(m: Market, bars: Bar[], at: Map<number, number>, ds: Decision[], 
   }
 }
 
-export type Score = ReturnType<typeof score>
-
-/** Everything a report needs for one market and mode. `alpha` sets the AUC interval (Bonferroni across markets). */
-export function analyze(m: Market, mode: Mode, alpha = 0.05) {
+/** Everything a report needs for one market. `alpha` sets the AUC interval (Bonferroni across markets). */
+export function analyze(m: Market, alpha = 0.05) {
   const bars = loadBars(m)
   const at = new Map(bars.map((b, i) => [b.t, i]))
-  const all = loadDecisions(m, mode)
+  const all = loadDecisions(m)
   const version = promptVersion(m)
   const ds = all.filter((d) => !d.err && d.prompt === version && at.has(d.t - 60))
-  if (!ds.length) throw new Error(`${m.id}: no ${mode} decisions for prompt ${version}`)
+  if (!ds.length) throw new Error(`${m.id}: no decisions for prompt ${version}`)
 
   // Parity: rebuilding each state from the final bars must give the hash that was sent to Jev.
   let parityBad = 0, parityN = 0
@@ -93,17 +91,16 @@ export function analyze(m: Market, mode: Mode, alpha = 0.05) {
   const gaps = ds.slice(1).map((d, k) => (d.t - ds[k]!.t) / 60)
   const S = config.horizonsMin.map((h) => score(m, bars, at, ds, h, alpha))
   const lat = ds.filter((d) => !d.cached && d.latencyMs).map((d) => d.latencyMs)
-  const lag = ds.filter((d) => d.lagMs !== undefined).map((d) => d.lagMs!)
   const span = bars.filter((b) => b.t >= ds[0]!.t - config.lookbackMin * 60 && b.t <= ds.at(-1)!.t)
   return {
-    m, mode, bars, ds, version, alpha,
+    m, bars, ds, version, alpha,
     errors: all.filter((d) => d.err).length,
     otherPrompts: all.filter((d) => !d.err && d.prompt !== version).length,
     parityN, parityBad,
     cadenceMin: gaps.length ? quantile(gaps, 0.5) : config.decisionEveryMin,
     emptyShare: mean(span.map((b) => Number(b.n === 0))),
     spend: ds.reduce((a, d) => a + d.costUsd, 0),
-    lat, lag, S,
+    lat, S,
     P: S.find((s) => s.h === config.primaryHorizonMin)!,
   }
 }

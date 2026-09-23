@@ -46,19 +46,16 @@ export function loadBars(m: Market): Bar[] {
  * after its tail. One eth_getLogs per 66-minute chunk covers every market that still needs that chunk, so
  * adding markets does not add requests. Chunks are written in time order, one append per chunk, so a crash
  * resumes where it stopped. Minutes without a swap carry the previous close.
- * fromMin defaults to the earliest tail. Returns, per market, the bars appended after its old tail.
  */
-export async function syncMarkets(clk: Clock, markets: Market[], fromMin: number | undefined, toMin: number, progress = false) {
+export async function syncMarkets(clk: Clock, markets: Market[], fromMin: number, toMin: number, progress = false) {
   const st = markets.map((m) => {
     const have = readBars(m)
-    return { m, closes: new Map(have.map((b) => [b.t, b.c])), tail: have.at(-1)?.t ?? -Infinity, appended: [] as Bar[] }
+    return { m, closes: new Map(have.map((b) => [b.t, b.c])) }
   })
-  const start = fromMin ?? Math.min(...st.map((s) => (Number.isFinite(s.tail) ? s.tail / 60 + 1 : Infinity)))
-  if (!Number.isFinite(start)) throw new Error('no bars yet: pass a start')
   for (const s of st) mkdirSync(marketDir(s.m), { recursive: true })
 
   const chunks: [number, number][] = []
-  for (let m = start; m < toMin; m += config.chunkMinutes) chunks.push([m, Math.min(m + config.chunkMinutes, toMin)])
+  for (let m = fromMin; m < toMin; m += config.chunkMinutes) chunks.push([m, Math.min(m + config.chunkMinutes, toMin)])
   const needs = (s: (typeof st)[number], f: number, t: number) => {
     for (let m = f; m < t; m++) if (!s.closes.has(m * 60)) return true
     return false
@@ -86,7 +83,6 @@ export async function syncMarkets(clk: Clock, markets: Market[], fromMin: number
           out.push(bar)
         }
         if (out.length) appendFileSync(barsFile(s.m), out.map((x) => JSON.stringify(x)).join('\n') + '\n')
-        s.appended.push(...out.filter((x) => x.t > s.tail))
       }
     }
     if (progress && fetched) {
@@ -95,8 +91,6 @@ export async function syncMarkets(clk: Clock, markets: Market[], fromMin: number
       console.log(`  chunks ${done}/${chunks.length}  up to ${iso(batch.at(-1)!.t * 60)}  eta ${eta.toFixed(0)}s`)
     }
   }
-  if (st.some((s) => s.m.id === ETH.id && s.appended.length)) ethCache = undefined
-  return new Map(st.map((s) => [s.m.id, s.appended]))
 }
 
 export const iso = (t: number) => new Date(t * 1000).toISOString().slice(0, 16).replace('T', ' ')

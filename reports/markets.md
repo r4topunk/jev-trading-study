@@ -1,6 +1,6 @@
-# Jev na Base: comparação entre mercados (backtest)
+# Jev na Base: comparação entre mercados
 
-Gerado 2026-09-23T16:43 UTC. 4 mercados, 4 dentro da regra de qualidade de dado.
+Gerado 2026-09-23T20:42 UTC. 4 mercados, 4 dentro da regra de qualidade de dado.
 Horizonte 15m, amostras sem sobreposição. IC por mercado a 99.29% (Bonferroni, 7 mercados).
 Gasto Jev total $3.14.
 

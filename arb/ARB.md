@@ -17,6 +17,8 @@ node arb/scan.ts --p 0.9 --k 5    # mais exigente no Jev, mais candidatos por me
 
 ## Resultado do primeiro snapshot (2026-09-23 17:46 UTC)
 
+Relatório completo do snapshot: [reports/scan-202609231738.md](reports/scan-202609231738.md).
+
 | | Valor |
 |---|---|
 | Mercados binários | Limitless 1.140, Polymarket 58.528 |
